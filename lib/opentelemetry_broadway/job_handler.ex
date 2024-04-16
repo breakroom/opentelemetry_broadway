@@ -48,14 +48,23 @@ defmodule OpentelemetryBroadway.JobHandler do
       ) do
     span_name = "#{inspect(topology_name)}/#{Atom.to_string(processor_key)} process"
     client_id = inspect(name)
-    payload_size_bytes = byte_size(message.data)
 
     attributes = %{
       SemanticConventions.Trace.messaging_system() => :broadway,
       SemanticConventions.Trace.messaging_operation() => :process,
-      SemanticConventions.Trace.messaging_consumer_id() => client_id,
-      SemanticConventions.Trace.messaging_message_payload_size_bytes() => payload_size_bytes
+      SemanticConventions.Trace.messaging_consumer_id() => client_id
     }
+
+    attributes =
+      if is_binary(message.data) do
+        Map.put(
+          attributes,
+          SemanticConventions.Trace.messaging_message_payload_size_bytes(),
+          byte_size(message.data)
+        )
+      else
+        attributes
+      end
 
     OpentelemetryTelemetry.start_telemetry_span(@tracer_id, span_name, metadata, %{
       kind: :consumer,
