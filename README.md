@@ -1,3 +1,6 @@
+> [!WARNING]
+> This project has become an [official OpenTelemetry integration](https://github.com/open-telemetry/opentelemetry-erlang-contrib/tree/main/instrumentation/opentelemetry_broadway), and this repo is no longer updated.
+
 # OpentelemetryBroadway
 
 OpentelemetryBroadway uses [telemetry](https://hexdocs.pm/telemetry/) handlers to
